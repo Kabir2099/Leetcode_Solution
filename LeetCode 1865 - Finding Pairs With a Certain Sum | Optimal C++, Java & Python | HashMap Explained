@@ -1,0 +1,112 @@
+# C++ code
+class FindSumPairs {
+public:
+    vector<int>arr1, arr2;
+    unordered_map<int, int>ump;
+    FindSumPairs(vector<int>& nums1, vector<int>& nums2) {
+        arr1 = nums1;
+        arr2 = nums2;
+        for(auto& el: nums2){
+            ump[el]++;
+        }
+    }
+    
+    void add(int index, int val) {
+        int old = arr2[index];
+        //delete from ump
+        ump[old]--;
+        if(ump[old]==0){
+            ump.erase(old);
+        }
+        arr2[index] = old+ val;
+        ump[old+val]++;
+    }
+    
+    int count(int tot) {
+        int ans = 0;
+        for(auto& el:arr1){
+            int diff = tot-el;
+            ans+=ump[diff];
+        }
+        return ans;
+    }
+};
+
+/**
+ * Your FindSumPairs object will be instantiated and called as such:
+ * FindSumPairs* obj = new FindSumPairs(nums1, nums2);
+ * obj->add(index,val);
+ * int param_2 = obj->count(tot);
+ */
+
+
+
+
+
+
+
+# Java code
+class FindSumPairs {
+    private int[] arr1, arr2;
+    private Map<Integer, Integer> freq;
+
+    public FindSumPairs(int[] nums1, int[] nums2) {
+        this.arr1 = nums1;
+        this.arr2 = nums2;
+        freq = new HashMap<>();
+        for (int num : nums2) {
+            freq.put(num, freq.getOrDefault(num, 0) + 1);
+        }
+    }
+
+    public void add(int index, int val) {
+        int oldVal = arr2[index];
+        freq.put(oldVal, freq.get(oldVal) - 1);
+        if (freq.get(oldVal) == 0) {
+            freq.remove(oldVal);
+        }
+
+        arr2[index] += val;
+        freq.put(arr2[index], freq.getOrDefault(arr2[index], 0) + 1);
+    }
+
+    public int count(int tot) {
+        int result = 0;
+        for (int num : arr1) {
+            int complement = tot - num;
+            result += freq.getOrDefault(complement, 0);
+        }
+        return result;
+    }
+}
+
+
+
+
+#Python Code
+from collections import defaultdict
+
+class FindSumPairs:
+
+    def __init__(self, nums1: List[int], nums2: List[int]):
+        self.arr1 = nums1
+        self.arr2 = nums2
+        self.freq = defaultdict(int)
+        for num in nums2:
+            self.freq[num] += 1
+
+    def add(self, index: int, val: int) -> None:
+        old_val = self.arr2[index]
+        self.freq[old_val] -= 1
+        if self.freq[old_val] == 0:
+            del self.freq[old_val]
+
+        self.arr2[index] += val
+        self.freq[self.arr2[index]] += 1
+
+    def count(self, tot: int) -> int:
+        count = 0
+        for num in self.arr1:
+            complement = tot - num
+            count += self.freq.get(complement, 0)
+        return count
